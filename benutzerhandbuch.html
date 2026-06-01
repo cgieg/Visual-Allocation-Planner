@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<style>
+@page { size: A4 portrait; margin: 0; }
+@page :first { margin: 0; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+:root {
+  --blue: #1D4ED8;
+  --blue-light: #3B82F6;
+  --blue-xlight: #EFF6FF;
+  --indigo: #6366F1;
+  --navy: #0F172A;
+  --dark: #1E293B;
+  --mid: #475569;
+  --muted: #64748B;
+  --light: #94A3B8;
+  --border: #E2E8F0;
+  --surface: #F8FAFC;
+  --white: #ffffff;
+  --green: #10B981;
+  --amber: #F59E0B;
+  --red: #EF4444;
+}
+
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--dark);
+  font-size: 9pt;
+  line-height: 1.55;
+  background: white;
+}
+
+/* ══════════════════════════════════════
+   PAGE WRAPPER
+══════════════════════════════════════ */
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  page-break-after: always;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.page:last-child { page-break-after: avoid; }
+
+/* ══════════════════════════════════════
+   COVER PAGE
+══════════════════════════════════════ */
+.cover {
+  background: linear-gradient(145deg, #0F172A 0%, #1E3A5F 40%, #1D4ED8 100%);
+  width: 210mm;
+  height: 297mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.cover-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.cover-bg-circle.c1 { width: 400px; height: 400px; bottom: -150px; right: -100px; }
+.cover-bg-circle.c2 { width: 250px; height: 250px; bottom: -60px; right: 60px; }
+.cover-bg-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 600px 400px at 70% 60%, rgba(99,102,241,0.25), transparent 70%);
+}
+
+.cover-top {
+  position: relative; z-index: 1;
+  padding: 36px 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cover-logo {
+  font-size: 12pt;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+}
+.cover-logo span { color: #60A5FA; }
+
+.cover-tag {
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cover-main {
+  position: relative; z-index: 1;
+  padding: 0 40px;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 100px;
+  padding: 4px 14px;
+  font-size: 7.5pt;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 20px;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #34D399; }
+
+.cover h1 {
+  font-size: 30pt;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: white;
+  margin-bottom: 10px;
+}
+.cover h1 em { font-style: normal; background: linear-gradient(90deg,#60A5FA,#A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.cover-sub {
+  font-size: 11pt;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+  margin-bottom: 36px;
+  max-width: 380px;
+}
+
+.cover-divider { width: 60px; height: 3px; background: linear-gradient(90deg,#60A5FA,#A78BFA); border-radius: 2px; margin-bottom: 28px; }
+
+.cover-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  max-width: 400px;
+}
+.cover-meta-item {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.cover-meta-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+.cover-meta-value { font-size: 10pt; font-weight: 700; color: white; }
+
+.cover-bottom {
+  position: relative; z-index: 1;
+  padding: 20px 40px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cover-bottom-text { font-size: 7.5pt; color: rgba(255,255,255,0.4); }
+.cover-bottom-text strong { color: rgba(255,255,255,0.65); }
+
+/* ══════════════════════════════════════
+   TOC PAGE
+══════════════════════════════════════ */
+.toc-page {
+  padding: 44px 40px;
+}
+.toc-header { margin-bottom: 28px; }
+.section-eyebrow {
+  font-size: 7.5pt; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--blue); margin-bottom: 8px;
+}
+.page-title {
+  font-size: 22pt; font-weight: 900; letter-spacing: -0.02em;
+  color: var(--navy); line-height: 1.1; margin-bottom: 8px;
+}
+.page-subtitle { font-size: 10pt; color: var(--muted); line-height: 1.5; }
+
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.toc-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.toc-num {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--blue), var(--indigo));
+  color: white; font-size: 9pt; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.toc-item h3 { font-size: 9.5pt; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.toc-item p { font-size: 7.5pt; color: var(--muted); line-height: 1.4; }
+.toc-item .toc-page-ref { font-size: 7pt; font-weight: 700; color: var(--blue); margin-top: 4px; }
+
+/* ══════════════════════════════════════
+   CONTENT PAGES - HEADER/FOOTER
+══════════════════════════════════════ */
+.content-page { padding: 0; }
+
+.page-header {
+  background: var(--navy);
+  color: white;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.page-header-title { font-size: 8pt; font-weight: 700; color: rgba(255,255,255,0.9); }
+.page-header-chapter { font-size: 7.5pt; color: rgba(255,255,255,0.45); }
+
+.page-body { flex: 1; padding: 24px 28px 0; }
+
+.page-footer {
+  padding: 8px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.page-footer span { font-size: 7pt; color: var(--light); }
+.page-footer strong { color: var(--muted); }
+
+/* ══════════════════════════════════════
+   CHAPTER TITLE
+══════════════════════════════════════ */
+.chapter-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+.chapter-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--blue), var(--indigo));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20pt; flex-shrink: 0;
+}
+.chapter-title h2 { font-size: 16pt; font-weight: 900; letter-spacing: -0.02em; color: var(--navy); margin-bottom: 3px; }
+.chapter-title p { font-size: 9pt; color: var(--muted); line-height: 1.4; }
+
+/* ══════════════════════════════════════
+   CONTENT ELEMENTS
+══════════════════════════════════════ */
+h3 { font-size: 11pt; font-weight: 800; color: var(--navy); margin: 0 0 8px; letter-spacing: -0.01em; }
+h4 { font-size: 9pt; font-weight: 700; color: var(--dark); margin: 0 0 5px; }
+p { font-size: 9pt; color: var(--mid); line-height: 1.6; margin-bottom: 8px; }
+
+.section { margin-bottom: 20px; }
+.section:last-child { margin-bottom: 0; }
+
+/* two-col layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+/* info box */
+.info-box {
+  background: var(--blue-xlight);
+  border: 1px solid #BFDBFE;
+  border-left: 3px solid var(--blue);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 13px;
+  margin-bottom: 12px;
+}
+.info-box p { color: #1E40AF; margin: 0; font-size: 8.5pt; }
+
+.warn-box {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 13px;
+  margin-bottom: 12px;
+}
+.warn-box p { color: #92400E; margin: 0; font-size: 8.5pt; }
+
+.tip-box {
+  background: #ECFDF5;
+  border: 1px solid #6EE7B7;
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 13px;
+  margin-bottom: 12px;
+}
+.tip-box p { color: #065F46; margin: 0; font-size: 8.5pt; }
+
+/* step card */
+.step-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 7px;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--blue);
+  color: white; font-size: 8pt; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-card h4 { font-size: 8.5pt; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+.step-card p { font-size: 8pt; color: var(--muted); margin: 0; line-height: 1.45; }
+
+/* feature card */
+.feat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px;
+}
+.feat-card-icon { font-size: 16pt; margin-bottom: 6px; display: block; }
+.feat-card h4 { font-size: 8.5pt; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.feat-card p { font-size: 7.5pt; color: var(--muted); margin: 0; line-height: 1.5; }
+
+/* pipeline stages */
+.stages-row { display: flex; gap: 0; margin-bottom: 14px; }
+.stage-box {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 9px 7px;
+  text-align: center;
+  position: relative;
+}
+.stage-box:first-child { border-radius: 8px 0 0 8px; }
+.stage-box:last-child { border-radius: 0 8px 8px 0; }
+.stage-box + .stage-box { border-left: none; }
+.stage-arrow { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 9pt; color: var(--light); font-weight: 700; z-index: 2; background: white; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+.stage-box:last-child .stage-arrow { display: none; }
+.stage-em { font-size: 12pt; display: block; margin-bottom: 3px; }
+.stage-name { font-size: 6.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--navy); }
+.stage-desc { font-size: 6pt; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+.stage-badge { display: inline-block; margin-top: 4px; font-size: 5.5pt; font-weight: 700; padding: 1px 5px; border-radius: 100px; }
+.sb-gray { background:#F1F5F9; color:var(--muted); border: 1px solid var(--border); }
+.sb-cyan { background:#F0F9FF; color:#0369A1; border: 1px solid #BAE6FD; }
+.sb-amber { background:#FFFBEB; color:#92400E; border: 1px solid #FCD34D; }
+.sb-violet { background:#F5F3FF; color:#5B21B6; border: 1px solid #DDD6FE; }
+.sb-green { background:#ECFDF5; color:#065F46; border: 1px solid #6EE7B7; }
+
+/* data table */
+table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 8pt; }
+th { background: var(--navy); color: white; padding: 6px 10px; text-align: left; font-size: 7.5pt; font-weight: 700; }
+th:first-child { border-radius: 6px 0 0 0; }
+th:last-child { border-radius: 0 6px 0 0; }
+td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--mid); vertical-align: top; }
+tr:nth-child(even) td { background: var(--surface); }
+.td-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 7pt; font-weight: 600; padding: 2px 7px; border-radius: 100px; }
+
+/* role badge */
+.role-blue { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+.role-purple { background: #F5F3FF; color: #5B21B6; border: 1px solid #DDD6FE; }
+.role-green { background: #ECFDF5; color: #065F46; border: 1px solid #6EE7B7; }
+.role-cyan { background: #F0F9FF; color: #0369A1; border: 1px solid #BAE6FD; }
+.role-teal { background: #F0FDFA; color: #0F766E; border: 1px solid #CCFBF1; }
+
+/* checklist */
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.checklist li { display: flex; align-items: flex-start; gap: 7px; font-size: 8.5pt; color: var(--mid); }
+.check { width: 15px; height: 15px; border-radius: 50%; background: #ECFDF5; border: 1px solid #6EE7B7; color: #059669; font-size: 8pt; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* mini label */
+.mlabel { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 3px; }
+
+/* kpi grid */
+.kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.kpi-box { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.kpi-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
+.kpi-val { font-size: 16pt; font-weight: 900; line-height: 1; color: var(--navy); }
+.kpi-sub { font-size: 6.5pt; color: var(--light); margin-top: 2px; }
+
+/* horizontal rule */
+hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* highlight text */
+.hl { background: #EFF6FF; color: var(--blue); font-weight: 700; padding: 1px 4px; border-radius: 3px; }
+
+/* page number accent */
+.pn { display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); color: white; font-size: 8pt; font-weight: 800; text-align: center; line-height: 20px; }
+
+/* sidebar layout */
+.sidebar-layout { display: grid; grid-template-columns: 1fr 200px; gap: 14px; }
+.sidebar-layout.left { grid-template-columns: 190px 1fr; }
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     DECKBLATT
+════════════════════════════════════════ -->
+<div class="page">
+<div class="cover">
+  <div class="cover-bg-circle c1"></div>
+  <div class="cover-bg-circle c2"></div>
+  <div class="cover-bg-glow"></div>
+
+  <div class="cover-top">
+    <div class="cover-logo">Visual <span>Allocation</span></div>
+    <div class="cover-tag">Internes Tool · Ressourcenplanung</div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-badge"><div class="badge-dot"></div>Benutzerhandbuch · Version 1.0</div>
+    <h1>Allocation<br/><em>Tool</em></h1>
+    <p class="cover-sub">Vollständige Dokumentation zur visuellen Ressourcenplanung für Projekt- und Poolmitarbeiter im Kunden-Umfeld.</p>
+    <div class="cover-divider"></div>
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Plattform</div>
+        <div class="cover-meta-value">Web Browser</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Version</div>
+        <div class="cover-meta-value">1.0 · 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Sprache</div>
+        <div class="cover-meta-value">Deutsch</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Technologie</div>
+        <div class="cover-meta-value">React · TypeScript</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <span class="cover-bottom-text"><strong>Visual Allocation Management</strong></span>
+    <span class="cover-bottom-text">Stand: Mai 2026</span>
+  </div>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     INHALTSVERZEICHNIS
+════════════════════════════════════════ -->
+<div class="page">
+<div class="toc-page">
+  <div class="toc-header">
+    <div class="section-eyebrow">Navigation</div>
+    <div class="page-title">Inhaltsverzeichnis</div>
+    <p class="page-subtitle">Das Benutzerhandbuch ist in 7 Kapitel gegliedert und deckt alle Funktionen der App vollständig ab.</p>
+  </div>
+
+  <div class="toc-grid">
+    <div class="toc-item">
+      <div class="toc-num">1</div>
+      <div>
+        <h3>Einführung &amp; Überblick</h3>
+        <p>Was ist das Allocation Tool? Wozu dient es und wie ist die App aufgebaut?</p>
+        <div class="toc-page-ref">→ Seite 3</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">2</div>
+      <div>
+        <h3>Erste Schritte</h3>
+        <p>App starten, Daten importieren, Benutzeroberfläche kennenlernen, exportieren.</p>
+        <div class="toc-page-ref">→ Seite 4</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">3</div>
+      <div>
+        <h3>KPI-Dashboard</h3>
+        <p>Gesamtauslastung, Einstellungsbedarf und kritische Risiken auf einen Blick.</p>
+        <div class="toc-page-ref">→ Seite 5</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">4</div>
+      <div>
+        <h3>Projekt-Pool (Whiteboard)</h3>
+        <p>Projekte anlegen, Mitarbeiter per Drag &amp; Drop zuweisen, Rollen verwalten.</p>
+        <div class="toc-page-ref">→ Seite 6</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">5</div>
+      <div>
+        <h3>Projekt-Pipeline</h3>
+        <p>Neue Projekte durch 5 Phasen führen – von der Opportunity bis zum Kickoff.</p>
+        <div class="toc-page-ref">→ Seite 7</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">6</div>
+      <div>
+        <h3>Personalpipeline</h3>
+        <p>Newcomer-Onboarding verfolgen und durch 4 Phasen bis zum Einsatz steuern.</p>
+        <div class="toc-page-ref">→ Seite 8</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num">7</div>
+      <div>
+        <h3>Mitarbeiter &amp; Datenverwaltung</h3>
+        <p>Mitarbeiterprofile, Skills, Risiken, Potenziale, Import/Export und Datenpflege.</p>
+        <div class="toc-page-ref">→ Seite 9</div>
+      </div>
+    </div>
+    <div class="toc-item">
+      <div class="toc-num" style="background:linear-gradient(135deg,#059669,#0891b2)">✦</div>
+      <div>
+        <h3>Referenz &amp; Tipps</h3>
+        <p>Rollenübersicht, Datenmodell, häufige Fragen, Best Practices und Tastenkürzel.</p>
+        <div class="toc-page-ref">→ Seite 10</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 22px; padding: 14px 16px; background: var(--blue-xlight); border: 1px solid #BFDBFE; border-radius: 10px;">
+    <div style="font-size:8.5pt; font-weight:700; color:#1E40AF; margin-bottom:6px;">💡 Kurzreferenz: Die vier Hauptmodule</div>
+    <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:8px;">
+      <div style="text-align:center; padding:8px; background:white; border-radius:7px; border:1px solid #BFDBFE;">
+        <div style="font-size:14pt; margin-bottom:3px;">📊</div>
+        <div style="font-size:7.5pt; font-weight:700; color:var(--navy);">KPI-Dashboard</div>
+        <div style="font-size:6.5pt; color:var(--muted);">Kennzahlen &amp; Risiken</div>
+      </div>
+      <div style="text-align:center; padding:8px; background:white; border-radius:7px; border:1px solid #BFDBFE;">
+        <div style="font-size:14pt; margin-bottom:3px;">🗂️</div>
+        <div style="font-size:7.5pt; font-weight:700; color:var(--navy);">Projekt-Pool</div>
+        <div style="font-size:6.5pt; color:var(--muted);">Aktive Projekte</div>
+      </div>
+      <div style="text-align:center; padding:8px; background:white; border-radius:7px; border:1px solid #BFDBFE;">
+        <div style="font-size:14pt; margin-bottom:3px;">🚀</div>
+        <div style="font-size:7.5pt; font-weight:700; color:var(--navy);">Projekt-Pipeline</div>
+        <div style="font-size:6.5pt; color:var(--muted);">Kommende Projekte</div>
+      </div>
+      <div style="text-align:center; padding:8px; background:white; border-radius:7px; border:1px solid #BFDBFE;">
+        <div style="font-size:14pt; margin-bottom:3px;">👥</div>
+        <div style="font-size:7.5pt; font-weight:700; color:var(--navy);">Personalpipeline</div>
+        <div style="font-size:6.5pt; color:var(--muted);">Newcomer-Tracking</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-footer">
+  <span>Visual Allocation Tool · Benutzerhandbuch</span>
+  <span><strong>Seite 2</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 1: EINFÜHRUNG
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 1 · Einführung &amp; Überblick</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">📖</div>
+    <div>
+      <h2>Einführung &amp; Überblick</h2>
+      <p>Was ist das Allocation Tool, wozu dient es und wie ist die App aufgebaut?</p>
+    </div>
+  </div>
+
+  <div class="section two-col">
+    <div>
+      <h3>Was ist das Allocation Tool?</h3>
+      <p>Das <strong>Visual Allocation Tool</strong> ist eine browserbasierte Standalone-Web-App zur <strong>visuellen Ressourcenplanung</strong> von Projekt- und Poolmitarbeitern im Kunden-Umfeld. Sie ermöglicht es, den Überblick über aktive Projekte, zukünftige Projekte, Mitarbeiterauslastungen und Neueinstellungen zentral an einem Ort zu behalten.</p>
+      <p>Die App läuft vollständig im Browser und benötigt weder einen Server noch eine Internetverbindung. Alle Daten werden lokal im Browser gespeichert und können per JSON-Datei mit dem Team geteilt werden.</p>
+      <div class="info-box">
+        <p><strong>🔒 Datenschutz:</strong> Alle Daten verbleiben ausschließlich lokal auf dem Gerät des Nutzers. Es werden keine Daten an externe Server übermittelt.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Kernfunktionen</h3>
+      <ul class="checklist">
+        <li><div class="check">✓</div>Visuelle Zuweisung von Mitarbeitern zu Projekten (Drag &amp; Drop)</li>
+        <li><div class="check">✓</div>Echtzeit-KPIs: Auslastung, FTE-Bedarf, Risiken</li>
+        <li><div class="check">✓</div>Kanban-Pipeline für kommende Projekte (5 Phasen)</li>
+        <li><div class="check">✓</div>Newcomer-Onboarding-Tracking (4 Phasen)</li>
+        <li><div class="check">✓</div>Globale Vakanzanalyse (Pool &amp; Pipeline)</li>
+        <li><div class="check">✓</div>Risiko- und Potenzialerfassung mit Zeitstempel</li>
+        <li><div class="check">✓</div>JSON-Import/Export für Teamaustausch</li>
+        <li><div class="check">✓</div>Tech-Lead-Kennzeichnung pro Projekt</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="section">
+    <h3>Aufbau der Benutzeroberfläche</h3>
+    <div class="three-col" style="margin-top:10px;">
+      <div class="feat-card">
+        <span class="feat-card-icon">🔝</span>
+        <h4>Header-Leiste (oben)</h4>
+        <p>Zeigt den App-Namen, den letzten Bearbeiter, die globale Vakanz-Statusanzeige sowie die Buttons für Import, Export und Zurücksetzen.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card-icon">🗂️</span>
+        <h4>Tab-Navigation (mitte)</h4>
+        <p>Vier Tabs: <strong>KPI-Dashboard</strong>, <strong>Projekt-Pool</strong>, <strong>Personalpipeline</strong> und <strong>Projekt-Pipeline</strong>. Der aktive Tab ist blau hinterlegt.</p>
+      </div>
+      <div class="feat-card">
+        <span class="feat-card-icon">👤</span>
+        <h4>Mitarbeiter-Sidebar (rechts)</h4>
+        <p>Zeigt alle aktiven Mitarbeiter mit Suchfeld, Rollenfilter und Bench-Filter. Sichtbar in Projekt-Pool und Personalpipeline.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="section">
+    <h3>Unterstützte Rollen</h3>
+    <p>Die App kennt acht vordefinierte Projektrollen, die bei der Personalzuweisung verwendet werden:</p>
+    <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:6px;">
+      <span class="td-badge role-blue">Proxy PO</span>
+      <span class="td-badge role-blue">Scrum Master</span>
+      <span class="td-badge role-green">SWE Frontend</span>
+      <span class="td-badge role-green">SWE Backend</span>
+      <span class="td-badge role-purple">Architekt</span>
+      <span class="td-badge role-cyan">UI/UX Designer</span>
+      <span class="td-badge role-teal">Test Consultant</span>
+      <span class="td-badge role-teal">Test Engineer</span>
+    </div>
+    <p style="margin-top:8px;">Software Engineers (SWE Frontend &amp; Backend) und Architekten können zusätzlich als <strong>Tech-Lead</strong> gekennzeichnet werden – pro Projekt ist maximal ein Tech-Lead möglich.</p>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 1 · Einführung &amp; Überblick</span>
+  <span><strong>Seite 3</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 2: ERSTE SCHRITTE
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 2 · Erste Schritte</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">🚦</div>
+    <div>
+      <h2>Erste Schritte</h2>
+      <p>App starten, Daten importieren, Oberfläche kennenlernen und Daten exportieren.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>App starten</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>dist/index.html öffnen</h4><p>Die gebaute App liegt als einzelne <code>index.html</code> im <code>dist/</code>-Ordner. Diese Datei direkt im Browser öffnen – kein Webserver nötig.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Lokaler Erstentwurf</h4><p>Beim ersten Start ist die App leer. Im Header erscheint der Status <em>„Lokaler Erstentwurf"</em>. Daten können manuell angelegt oder importiert werden.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>Daten aus Teamstand laden</h4><p>Existiert bereits eine exportierte <code>Ressourcenplan_*.json</code>-Datei vom Team, diese über <strong>„Projektstand importieren"</strong> laden.</p></div>
+      </div>
+
+      <div class="warn-box" style="margin-top:10px;">
+        <p>⚠️ <strong>Wichtig:</strong> Die App speichert Daten automatisch im Browser-LocalStorage. Beim Löschen des Browser-Caches gehen diese Daten verloren. Regelmäßig exportieren!</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Header-Funktionen</h3>
+      <table>
+        <thead><tr><th>Element</th><th>Funktion</th></tr></thead>
+        <tbody>
+          <tr><td><strong>App-Titel</strong></td><td>Visual Allocation Tool – Klick hat keine Funktion</td></tr>
+          <tr><td><strong>Info-Badge</strong></td><td>Zeigt letzten Bearbeiter und Datum des Imports</td></tr>
+          <tr><td><strong>Vakanz-Button</strong></td><td>Zeigt offene Stellen in Pool und Pipeline; grün = alles besetzt, amber = Vakanzen vorhanden</td></tr>
+          <tr><td><strong>Zurücksetzen</strong></td><td>Löscht ALLE Daten unwiderruflich nach Bestätigung</td></tr>
+          <tr><td><strong>Importieren</strong></td><td>Lädt einen gespeicherten JSON-Stand ins System</td></tr>
+          <tr><td><strong>Speichern &amp; Exportieren</strong></td><td>Erstellt eine JSON-Datei mit aktuellem Namens- und Datumsstempel</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:4px;">Exportieren (Teamaustausch)</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>Button klicken</h4><p>Auf <strong>„Speichern &amp; Exportieren"</strong> klicken. Es erscheint eine Namensabfrage.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Namen eingeben</h4><p>Deinen Namen eingeben. Dieser wird als Bearbeiter im Header der App vermerkt.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>Datei weitergeben</h4><p>Die Datei <code>Ressourcenplan_YYYY-MM-DD_Name.json</code> wird heruntergeladen und kann per E-Mail, Teams etc. geteilt werden.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="section">
+    <h3>Globale Vakanzanzeige im Header</h3>
+    <p>Der <strong>Vakanz-Button</strong> im Header zeigt immer den aktuellen Besetzungsstand. Ein Klick öffnet ein Dropdown mit zwei Spalten:</p>
+    <div class="two-col" style="margin-top:6px;">
+      <div class="feat-card">
+        <h4>🟡 Aktiver Projekt-Pool</h4>
+        <p>Zeigt alle Rollen mit unbesetzten Positionen in aktiven Projekten. Die Anzeige erfolgt in Prozent (z.B. <em>„SWE Backend: 100% offen"</em>).</p>
+      </div>
+      <div class="feat-card">
+        <h4>🔵 Projekt-Pipeline</h4>
+        <p>Zeigt Rollenvakanzen aus geplanten Pipeline-Projekten. Diese sind noch nicht aktiv, zeigen aber den voraussichtlichen Bedarf.</p>
+      </div>
+    </div>
+    <div class="tip-box" style="margin-top:10px;">
+      <p>✅ <strong>Tipp:</strong> Wenn der Vakanz-Button grün leuchtet und <em>„100% gestafft"</em> anzeigt, sind alle Rollen in allen Projekten vollständig besetzt.</p>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 2 · Erste Schritte</span>
+  <span><strong>Seite 4</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 3: KPI-DASHBOARD
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 3 · KPI-Dashboard</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">📊</div>
+    <div>
+      <h2>KPI-Dashboard</h2>
+      <p>Gesamtauslastung, Einstellungsbedarf und kritische Risiken auf einen Blick.</p>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-box">
+      <div class="kpi-label">🎯 Gesamtauslastung</div>
+      <div class="kpi-val" style="color:var(--blue);">87%</div>
+      <div class="kpi-sub">Inkl. Pool &amp; Pipeline</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-label">👥 Einstellungsbedarf</div>
+      <div class="kpi-val" style="color:#0EA5E9;">3.5 FTE</div>
+      <div class="kpi-sub">Offene Rollen gesamt</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-label">⚠️ Kritische Risiken</div>
+      <div class="kpi-val" style="color:var(--red);">2</div>
+      <div class="kpi-sub">Severity/Impact Hoch+</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>KPI 1: Gesamtauslastung</h3>
+      <p>Zeigt, wie viel Prozent der Gesamtkapazität aller aktiven Mitarbeiter aktuell verplant ist. Die Berechnung berücksichtigt sowohl den aktiven Projekt-Pool als auch die Projekt-Pipeline.</p>
+      <table>
+        <thead><tr><th>Wert</th><th>Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td><strong>&lt; 100%</strong></td><td>Freie Kapazität vorhanden (Bench)</td></tr>
+          <tr><td><strong>100%</strong></td><td>Optimale Vollauslastung</td></tr>
+          <tr><td><strong>&gt; 100%</strong></td><td>Überbucht – Anzeige in Rot</td></tr>
+        </tbody>
+      </table>
+      <p>Darunter sind zwei Untermetriken sichtbar: <span class="hl">Auf der Bench</span> (Personen unter 100%) und <span class="hl">Überbucht</span> (Personen über 100%).</p>
+
+      <h3 style="margin-top:10px;">KPI 3: Kritische Risiken</h3>
+      <p>Zählt alle Risiko-Einträge aus Mitarbeiter- und Projektprofilen, die mit <strong>Impact: Hoch/Kritisch</strong> oder <strong>Severity: Hoch/Kritisch</strong> bewertet wurden. Die Einträge werden als Karten direkt im Widget angezeigt.</p>
+      <div class="warn-box">
+        <p>⚠️ <strong>Rote Kachel:</strong> Die KPI-Karte für Kritische Risiken hat immer einen roten Rahmen, um sofortige Aufmerksamkeit zu signalisieren.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>KPI 2: Einstellungsbedarf</h3>
+      <p>Berechnet den aggregierten FTE-Bedarf (Full-Time Equivalent) aus allen offenen Positionen in aktiven Projekten (Pool) und geplanten Projekten (Pipeline).</p>
+      <p><strong>Formel:</strong><br/>Offener Bedarf (%) ÷ 100 = FTE je Rolle<br/>Summiert über alle Rollen und Projekte.</p>
+      <p>Die drei größten Bedarfe werden als Kurzliste angezeigt.</p>
+      <div class="info-box">
+        <p>ℹ️ Eine Person, die einem Projekt zu 50% zugewiesen ist, deckt 0,5 FTE ab. Eine 100%-Zuweisung entspricht 1,0 FTE.</p>
+      </div>
+
+      <h3 style="margin-top:10px;">Detaillierter FTE-Bedarf (Balkendiagramm)</h3>
+      <p>Unterhalb der drei KPI-Kacheln zeigt ein horizontales Balkendiagramm den vollständigen Einstellungsbedarf nach Rolle – sortiert nach Größe. Hover über einen Balken zeigt den exakten FTE-Wert.</p>
+      <div class="tip-box">
+        <p>✅ <strong>Wenn keine Vakanzen vorhanden sind,</strong> erscheint in der Balken-Sektion ein grüner Hinweis: <em>„Aktuell keine Vakanzen identifiziert."</em></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 3 · KPI-Dashboard</span>
+  <span><strong>Seite 5</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 4: PROJEKT-POOL
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 4 · Projekt-Pool (Whiteboard)</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">🗂️</div>
+    <div>
+      <h2>Projekt-Pool (Whiteboard)</h2>
+      <p>Aktive Projekte verwalten und Mitarbeiter per Drag &amp; Drop zuweisen.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Projekte anlegen</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>Button „Neues Projekt"</h4><p>Oben rechts im Projekt-Pool auf <strong>„+ Neues Projekt"</strong> klicken.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Name eingeben</h4><p>Im Browser-Dialog den Projektnamen eingeben und bestätigen. Das Projekt erscheint sofort als Karte.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>Projektdetails öffnen</h4><p>Auf das <strong>⚙ Icon</strong> oder den Projektnamen klicken, um das Detailformular zu öffnen und Farbe, Beschreibung, Delivery Lead, Kontakte und benötigte Rollen zu hinterlegen.</p></div>
+      </div>
+
+      <h3 style="margin-top:12px;">Mitarbeiter zuweisen (Drag &amp; Drop)</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>Mitarbeiterkarte greifen</h4><p>In der rechten Sidebar eine Mitarbeiterkarte per Klick+Halten anfassen (ab 5px Bewegung startet der Drag).</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Auf Projektkarte ziehen</h4><p>Die Karte über eine Projektkarte ziehen. Diese wird blau umrandet, wenn der Drop gültig ist.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>Prozentsatz einstellen</h4><p>Nach dem Drop erscheint der Mitarbeiter in der Projektkarte. Den Prozentsatz (z.B. 50%, 100%) im Eingabefeld anpassen.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div><h4>Rolle und Tech-Lead</h4><p>Die Projekt-Rolle kann in der Allokationskarte geändert werden. SWEs und Architekten können als <strong>Tech-Lead</strong> markiert werden (max. 1 pro Projekt).</p></div>
+      </div>
+    </div>
+
+    <div>
+      <h3>Mitarbeiter-Sidebar</h3>
+      <table>
+        <thead><tr><th>Element</th><th>Funktion</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Suchfeld</strong></td><td>Suche nach Name oder Skill</td></tr>
+          <tr><td><strong>Rollenfilter</strong></td><td>Filtert nach einer bestimmten Rolle</td></tr>
+          <tr><td><strong>Bench-Toggle</strong></td><td>Zeigt nur Mitarbeiter unter 100% Auslastung</td></tr>
+          <tr><td><strong>+ Icon</strong></td><td>Neuen Mitarbeiter anlegen</td></tr>
+          <tr><td><strong>Rote Karte</strong></td><td>Mitarbeiter ist überbucht (&gt;100%)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:10px;">Auslastungsanzeige auf Mitarbeiterkarte</h3>
+      <p>Jede Mitarbeiterkarte zeigt einen Fortschrittsbalken mit der Gesamtauslastung (Pool + Pipeline):</p>
+      <div style="display:flex; flex-direction:column; gap:5px; margin-top:4px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:60px; height:6px; background:#DCFCE7; border-radius:3px; overflow:hidden;"><div style="width:75%; height:100%; background:#10B981; border-radius:3px;"></div></div>
+          <span style="font-size:7.5pt; color:var(--mid);">Grün: Unter 100% (freie Kapazität)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:60px; height:6px; background:#FEE2E2; border-radius:3px; overflow:hidden;"><div style="width:100%; height:100%; background:#EF4444; border-radius:3px;"></div></div>
+          <span style="font-size:7.5pt; color:var(--mid);">Rot: Über 100% (Überbuchung)</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top:12px;">Vakanz-Widget im Pool</h3>
+      <p>Wenn benötigte Rollen in einem Projekt nicht vollständig besetzt sind, erscheint am Anfang des Whiteboards ein <strong>gelbes Warn-Widget</strong>. Aufklappen zeigt alle offenen Rollen mit den betroffenen Projekten und dem prozentualen Fehlbedarf.</p>
+
+      <div class="tip-box">
+        <p>✅ <strong>Tipp:</strong> Mit dem <strong>Bench-Toggle</strong> in der Sidebar nur Mitarbeiter mit freier Kapazität anzeigen lassen – so sieht man sofort, wer noch Kapazität für neue Projekte hat.</p>
+      </div>
+
+      <h3 style="margin-top:10px;">Mitarbeiter aus Projekt entfernen</h3>
+      <p>Im der Allokationskarte auf das <strong>✕-Icon</strong> klicken. Der Mitarbeiter bleibt im Mitarbeiter-Pool erhalten, die Zuweisung zum Projekt wird gelöscht.</p>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 4 · Projekt-Pool (Whiteboard)</span>
+  <span><strong>Seite 6</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 5: PROJEKT-PIPELINE
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 5 · Projekt-Pipeline</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">🚀</div>
+    <div>
+      <h2>Projekt-Pipeline</h2>
+      <p>Kommende Projekte durch 5 Phasen führen – von der Opportunity bis zum Kickoff.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Der 5-Phasen-Prozess</h3>
+    <div class="stages-row" style="margin-top:8px;">
+      <div class="stage-box">
+        <span class="stage-em">🔭</span>
+        <div class="stage-name">Opportunity</div>
+        <div class="stage-desc">Neue Projektchance erkannt</div>
+        <div class="stage-arrow">›</div>
+        <span class="stage-badge sb-gray">Phase 1</span>
+      </div>
+      <div class="stage-box">
+        <span class="stage-em">📨</span>
+        <div class="stage-name">Anfrage</div>
+        <div class="stage-desc">Projektanfrage aus der Plattform erhalten</div>
+        <div class="stage-arrow">›</div>
+        <span class="stage-badge sb-cyan">Phase 2</span>
+      </div>
+      <div class="stage-box">
+        <span class="stage-em">⚖️</span>
+        <div class="stage-name">Go / No Go</div>
+        <div class="stage-desc">Bewertung &amp; Entscheidung</div>
+        <div class="stage-arrow">›</div>
+        <span class="stage-badge sb-amber">Phase 3</span>
+      </div>
+      <div class="stage-box">
+        <span class="stage-em">👥</span>
+        <div class="stage-name">Staffing</div>
+        <div class="stage-desc">Team zusammenstellen</div>
+        <div class="stage-arrow">›</div>
+        <span class="stage-badge sb-violet">Phase 4</span>
+      </div>
+      <div class="stage-box">
+        <span class="stage-em">🚀</span>
+        <div class="stage-name">Kickoff</div>
+        <div class="stage-desc">Bereit für Projektstart</div>
+        <div class="stage-arrow">›</div>
+        <span class="stage-badge sb-green">Phase 5 → Pool</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Neues Pipeline-Projekt anlegen</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>„+ Neues Pipeline-Projekt" klicken</h4><p>Öffnet das Formular zum Anlegen eines neuen Projekts.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Pflichtfeld: Projektname</h4><p>Mindestens den Projektnamen eingeben. Alle anderen Felder sind optional.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>Weitere Angaben (optional)</h4><p>Kundenbereich / Abteilung, Delivery Lead, Ansprechpartner Anfrage-Kanal, Ansprechpartner im Bereich, Beschreibung, geschätzter Start, Laufzeit Ende (MM/YYYY).</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div><h4>Benötigte Rollen definieren</h4><p>Über <strong>„+ Rolle hinzufügen"</strong> Rollen und den benötigten Prozentsatz (z.B. SWE Backend: 100%) angeben. Kann auch später ergänzt werden.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <div><h4>„Projekt anlegen" bestätigen</h4><p>Das Projekt erscheint automatisch in der Spalte <strong>Opportunity</strong>.</p></div>
+      </div>
+
+      <div class="info-box" style="margin-top:6px;">
+        <p>ℹ️ Das Projekt erhält automatisch eine zufällige Farbe. Diese kann im Detailmodal geändert werden.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Projekte zwischen Phasen verschieben</h3>
+      <p>Projektarten innerhalb der Pipeline können per <strong>Drag &amp; Drop</strong> zwischen den Kanban-Spalten verschoben werden.</p>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>Projektkarte greifen</h4><p>Die Karte anfassen und in die gewünschte Spalte ziehen. Ein blauer Rahmen zeigt den gültigen Dropbereich.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Kickoff-Phase: Bestätigung</h4><p>Beim Verschieben in die <strong>Kickoff-Spalte</strong> erscheint ein Bestätigungsdialog.</p></div>
+      </div>
+
+      <h3 style="margin-top:12px;">Projekt in den Pool überführen</h3>
+      <p>In der <strong>Kickoff-Spalte</strong> erscheint auf jeder Projektkarte ein <strong>„In Pool überführen"</strong>-Button. Nach Bestätigung:</p>
+      <ul class="checklist">
+        <li><div class="check">✓</div>Das Projekt wird aus der Pipeline entfernt</li>
+        <li><div class="check">✓</div>Es erscheint als aktives Projekt im Whiteboard</li>
+        <li><div class="check">✓</div>Alle bereits zugewiesenen Personen werden als Allokationen übernommen</li>
+        <li><div class="check">✓</div>Projektdaten (Name, Farbe, Kontakte) werden übertragen</li>
+      </ul>
+
+      <h3 style="margin-top:10px;">Personen vorplanen (Staffing-Phase)</h3>
+      <p>Im Projektdetail-Modal (Klick auf Projektkarte) können in der Staffing-Phase bereits Mitarbeiter pro Rolle vorgemerkt werden. Diese Belegungen fließen in die Auslastungsberechnung und Vakanzanalyse ein.</p>
+
+      <div class="tip-box">
+        <p>✅ <strong>Tipp:</strong> Im Header-Badge wird <em>„X Pipeline-Projekte"</em> als Badge-Zahl angezeigt, wenn Projekte in der Pipeline sind und man sich gerade nicht im Pipeline-Tab befindet.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 5 · Projekt-Pipeline</span>
+  <span><strong>Seite 7</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 6: PERSONALPIPELINE
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 6 · Personalpipeline (Newcomer-Onboarding)</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">👥</div>
+    <div>
+      <h2>Personalpipeline</h2>
+      <p>Newcomer-Onboarding verfolgen und durch 4 Phasen bis zum Einsatz steuern.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Der 4-Phasen-Onboarding-Prozess</h3>
+    <div class="two-col" style="margin-top:8px; gap:10px;">
+      <div class="feat-card" style="border-left: 3px solid #94A3B8;">
+        <h4>📝 Phase 1: Vertragsphase</h4>
+        <p>Vertragserstellung und Unterschrift. Der Newcomer ist dem Unternehmen noch nicht offiziell beigetreten. Startdatum kann hinterlegt werden.</p>
+      </div>
+      <div class="feat-card" style="border-left: 3px solid #0891b2;">
+        <h4>⚙️ Phase 2: Onboarding-Vorbereitung</h4>
+        <p>IT-Equipment und Zugänge werden bereitgestellt. Interne Vorbereitungen laufen auf Hochtouren, bevor der Mitarbeiter seinen ersten Tag hat.</p>
+      </div>
+      <div class="feat-card" style="border-left: 3px solid var(--amber);">
+        <h4>📞 Phase 3: Pre-Boarding</h4>
+        <p>Kontakt halten bis zum Startdatum. Der Newcomer wird regelmäßig informiert und begleitet, bis er tatsächlich beginnt.</p>
+      </div>
+      <div class="feat-card" style="border-left: 3px solid var(--green);">
+        <h4>✅ Phase 4: Erster Arbeitstag</h4>
+        <p>Bereit für den Projektstart. Von hier aus kann der Mitarbeiter in den aktiven Mitarbeiter-Pool überführt werden.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="two-col">
+    <div>
+      <h3>Neuen Kandidaten anlegen</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>„+ Neuen Kandidaten anlegen"</h4><p>Oben rechts in der Personalpipeline auf den blauen Button klicken.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Name und Rolle eingeben</h4><p>Den vollständigen Namen und die geplante Rolle eingeben (z.B. „SWE Backend").</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div><h4>„Anlegen" bestätigen</h4><p>Der Newcomer erscheint automatisch in der <strong>Vertragsphase</strong> (Phase 1).</p></div>
+      </div>
+
+      <h3 style="margin-top:12px;">Phase wechseln</h3>
+      <p>Newcomer werden per <strong>Drag &amp; Drop</strong> zwischen den vier Spalten verschoben:</p>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>Karte greifen</h4><p>Die Newcomer-Karte anfassen und in die neue Spalte ziehen.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Loslassen</h4><p>Die Karte in der Zielspalte loslassen. Die Phase wird sofort aktualisiert und gespeichert.</p></div>
+      </div>
+
+      <div class="info-box" style="margin-top:6px;">
+        <p>ℹ️ Newcomer in der Personalpipeline sind <strong>noch nicht</strong> im aktiven Mitarbeiter-Pool sichtbar. Sie tauchen erst dort auf, wenn ihr Status auf <em>„aktiv"</em> geändert wird.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Newcomer-Profil bearbeiten</h3>
+      <p>Ein Klick auf eine Newcomer-Karte öffnet das Profil-Modal:</p>
+      <table>
+        <thead><tr><th>Feld</th><th>Beschreibung</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Name</strong></td><td>Vollständiger Name des Mitarbeiters</td></tr>
+          <tr><td><strong>Aktuelle Rolle</strong></td><td>Geplante Rolle im Projekt</td></tr>
+          <tr><td><strong>Skills</strong></td><td>Kommagetrennte Fähigkeiten (z.B. React, Java)</td></tr>
+          <tr><td><strong>Startdatum</strong></td><td>Geplanter erster Arbeitstag</td></tr>
+          <tr><td><strong>Risiken</strong></td><td>Optionale Risikoerfassung mit Impact/Severity</td></tr>
+          <tr><td><strong>Potenziale</strong></td><td>Entwicklungspotenziale und Interessen</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:10px;">Newcomer aktivieren</h3>
+      <p>Wenn ein Mitarbeiter seinen ersten Arbeitstag erreicht hat, kann sein Status im Profil-Modal auf <strong>„Aktiv"</strong> gesetzt werden. Danach:</p>
+      <ul class="checklist">
+        <li><div class="check">✓</div>Verschwindet aus der Personalpipeline</li>
+        <li><div class="check">✓</div>Erscheint in der Mitarbeiter-Sidebar im Projekt-Pool</li>
+        <li><div class="check">✓</div>Kann ab sofort Projekten zugewiesen werden</li>
+      </ul>
+
+      <h3 style="margin-top:10px;">Startdatum-Anzeige</h3>
+      <p>Wenn ein Startdatum hinterlegt ist, berechnet die App automatisch, wie viele Tage noch bis zum Start verbleiben, und zeigt dies auf der Karte an.</p>
+
+      <div class="tip-box">
+        <p>✅ <strong>Tipp:</strong> Alle Newcomer in der Personalpipeline sollten spätestens in Phase 4 mit einem Startdatum versehen sein, damit der Einsatztermin geplant werden kann.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 6 · Personalpipeline</span>
+  <span><strong>Seite 8</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 7: MITARBEITER & DATENVERWALTUNG
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Kapitel 7 · Mitarbeiter &amp; Datenverwaltung</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon">🗃️</div>
+    <div>
+      <h2>Mitarbeiter &amp; Datenverwaltung</h2>
+      <p>Mitarbeiterprofile, Risiken, Potenziale, Import/Export und Datenpflege.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Mitarbeiter anlegen (aktiv)</h3>
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div><h4>+ Icon in der Sidebar</h4><p>Im Projekt-Pool oben in der Sidebar das <strong>+ Icon</strong> anklicken.</p></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div><h4>Name und Rolle</h4><p>Namen und die aktuelle Rolle eingeben und bestätigen. Der Mitarbeiter ist sofort verfügbar.</p></div>
+      </div>
+
+      <h3 style="margin-top:10px;">Mitarbeiter-Profil bearbeiten</h3>
+      <p>Klick auf eine Mitarbeiterkarte im Projekt-Pool öffnet das vollständige Profil:</p>
+      <table>
+        <thead><tr><th>Feld</th><th>Beschreibung</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Name</strong></td><td>Vollständiger Name</td></tr>
+          <tr><td><strong>Aktuelle Rolle</strong></td><td>Rolle im Unternehmen / Projekt</td></tr>
+          <tr><td><strong>Skills</strong></td><td>Kommagetrennte Fähigkeiten</td></tr>
+          <tr><td><strong>Risiken</strong></td><td>Neue Risiken mit Impact &amp; Severity eintragen</td></tr>
+          <tr><td><strong>Potenziale</strong></td><td>Entwicklungswünsche und -potenziale</td></tr>
+          <tr><td><strong>Allokationen</strong></td><td>Schreibgeschützte Übersicht aller Projektzuweisungen</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:10px;">Risiken und Potenziale erfassen</h3>
+      <p>Neue Risiken und Potenziale werden <strong>angehängt</strong>, nicht überschrieben. Jeder Eintrag bekommt automatisch einen <strong>Zeitstempel</strong> und den Namen des Bearbeiters.</p>
+      <div class="info-box">
+        <p>ℹ️ <strong>Format:</strong><br/><code>[DD.MM.YYYY, HH:MM - Name] [Impact: X | Severity: Y]: Beschreibung</code><br/>Einträge mit Impact/Severity „Hoch" oder „Kritisch" erscheinen im KPI-Dashboard.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Mitarbeiter löschen</h3>
+      <p>Ein Mitarbeiter kann nur dann gelöscht werden, wenn er <strong>keinen aktiven Allokationen</strong> zugewiesen ist. Im Profil erscheint dann der rote Button <strong>„Mitarbeiter löschen"</strong>.</p>
+      <div class="warn-box">
+        <p>⚠️ Das Löschen eines Mitarbeiters kann nicht rückgängig gemacht werden. Zuerst alle Allokationen entfernen.</p>
+      </div>
+
+      <h3 style="margin-top:10px;">Datenpersistenz &amp; Import/Export</h3>
+      <table>
+        <thead><tr><th>Aktion</th><th>Beschreibung</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Auto-Speichern</strong></td><td>Jede Änderung wird sofort im Browser-LocalStorage gespeichert</td></tr>
+          <tr><td><strong>Export</strong></td><td>JSON-Datei mit Datum und Name – teilen per E-Mail oder Teams</td></tr>
+          <tr><td><strong>Import</strong></td><td>JSON-Datei laden – überschreibt den aktuellen Stand</td></tr>
+          <tr><td><strong>Zurücksetzen</strong></td><td>Alle Daten löschen (mit Bestätigung)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:10px;">Exportierter Datensatz (JSON)</h3>
+      <p>Die exportierte JSON-Datei enthält folgende Daten:</p>
+      <ul class="checklist">
+        <li><div class="check">✓</div><strong>employees</strong> – Alle Mitarbeiterprofile</li>
+        <li><div class="check">✓</div><strong>projects</strong> – Alle aktiven Projekte im Pool</li>
+        <li><div class="check">✓</div><strong>allocations</strong> – Alle Mitarbeiter-Projekt-Zuweisungen</li>
+        <li><div class="check">✓</div><strong>pipelineProjects</strong> – Alle Pipeline-Projekte</li>
+        <li><div class="check">✓</div><strong>metadata</strong> – Letzter Bearbeiter &amp; Zeitstempel</li>
+      </ul>
+
+      <div class="tip-box">
+        <p>✅ <strong>Empfehlung:</strong> Nach jeder Planungssession exportieren und die Datei mit Datum benennen. So entsteht automatisch eine Versionshistorie.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Kapitel 7 · Mitarbeiter &amp; Datenverwaltung</span>
+  <span><strong>Seite 9</strong></span>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     KAP 8: REFERENZ & TIPPS
+════════════════════════════════════════ -->
+<div class="page content-page">
+<div class="page-header">
+  <div class="page-header-title">Referenz &amp; Tipps</div>
+  <div class="page-header-chapter">Visual Allocation Tool · Benutzerhandbuch</div>
+</div>
+<div class="page-body">
+
+  <div class="chapter-title">
+    <div class="chapter-icon" style="background:linear-gradient(135deg,#059669,#0891b2)">📋</div>
+    <div>
+      <h2>Referenz &amp; Best Practices</h2>
+      <p>Rollenübersicht, Fehlerbehebung, häufige Fragen und Empfehlungen.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Rollenreferenz</h3>
+      <table>
+        <thead><tr><th>Rolle</th><th>Kürzel</th><th>Tech-Lead möglich</th></tr></thead>
+        <tbody>
+          <tr><td><span class="td-badge role-blue">Proxy PO</span></td><td>PO</td><td>–</td></tr>
+          <tr><td><span class="td-badge role-blue">Scrum Master</span></td><td>SM</td><td>–</td></tr>
+          <tr><td><span class="td-badge role-green">SWE Frontend</span></td><td>SWE FE</td><td>✅ Ja</td></tr>
+          <tr><td><span class="td-badge role-green">SWE Backend</span></td><td>SWE BE</td><td>✅ Ja</td></tr>
+          <tr><td><span class="td-badge role-purple">Architekt</span></td><td>ARC</td><td>✅ Ja</td></tr>
+          <tr><td><span class="td-badge role-cyan">UI/UX Designer</span></td><td>UX</td><td>–</td></tr>
+          <tr><td><span class="td-badge role-teal">Test Consultant</span></td><td>TC</td><td>–</td></tr>
+          <tr><td><span class="td-badge role-teal">Test Engineer</span></td><td>TE</td><td>–</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:12px;">Häufige Fragen (FAQ)</h3>
+
+      <div style="margin-bottom:8px;">
+        <div style="font-size:8.5pt; font-weight:700; color:var(--navy); margin-bottom:3px;">Kann ein Mitarbeiter mehreren Projekten zugewiesen sein?</div>
+        <p style="margin:0; font-size:8pt;">Ja. Ein Mitarbeiter kann beliebig vielen Projekten zugewiesen werden. Die Summe aller Prozentsätze wird als Gesamtauslastung angezeigt. Überschreitet sie 100%, wird die Karte rot markiert.</p>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:8.5pt; font-weight:700; color:var(--navy); margin-bottom:3px;">Was passiert, wenn ich den Browser-Cache lösche?</div>
+        <p style="margin:0; font-size:8pt;">Alle nicht exportierten Daten gehen verloren. Deswegen regelmäßig exportieren und die JSON-Datei sichern.</p>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:8.5pt; font-weight:700; color:var(--navy); margin-bottom:3px;">Kann ich mehrere Browser gleichzeitig nutzen?</div>
+        <p style="margin:0; font-size:8pt;">Nein. Der LocalStorage ist browser-spezifisch. Für Teamarbeit immer den JSON-Export/Import-Workflow nutzen.</p>
+      </div>
+      <div>
+        <div style="font-size:8.5pt; font-weight:700; color:var(--navy); margin-bottom:3px;">Kann ich die App auf dem Handy nutzen?</div>
+        <p style="margin:0; font-size:8pt;">Die App ist für Desktop-Browser optimiert. Drag &amp; Drop funktioniert auf mobilen Geräten eingeschränkt.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Best Practices</h3>
+      <ul class="checklist" style="margin-bottom:14px;">
+        <li><div class="check">✓</div><strong>Wöchentlicher Export:</strong> Nach jedem Planungsmeeting exportieren und Datei archivieren</li>
+        <li><div class="check">✓</div><strong>Bench-Toggle nutzen:</strong> Vor Projektzuweisungen den Bench-Filter aktivieren, um sofort freie Kapazitäten zu sehen</li>
+        <li><div class="check">✓</div><strong>Risiken zeitnah erfassen:</strong> Risiken direkt nach Bekanntwerden eintragen, damit das Dashboard immer aktuell ist</li>
+        <li><div class="check">✓</div><strong>Pipeline früh befüllen:</strong> Neue Projekte schon in der Opportunity-Phase eintragen, um frühzeitig Personalbedarfe zu erkennen</li>
+        <li><div class="check">✓</div><strong>Startdaten pflegen:</strong> Newcomer-Startdaten immer aktuell halten für korrekte Kapazitätsplanung</li>
+        <li><div class="check">✓</div><strong>Tech-Lead setzen:</strong> Pro Projekt mit Entwicklern/Architekten einen Tech-Lead definieren, damit das System keine Warnungen anzeigt</li>
+      </ul>
+
+      <h3>Fehlerbehebung</h3>
+      <table>
+        <thead><tr><th>Problem</th><th>Lösung</th></tr></thead>
+        <tbody>
+          <tr><td>Mitarbeiter lässt sich nicht löschen</td><td>Alle Projektzuweisungen zuerst entfernen</td></tr>
+          <tr><td>Drag &amp; Drop funktioniert nicht</td><td>Mindestens 5 Pixel bewegen, um Drag zu starten</td></tr>
+          <tr><td>Import schlägt fehl</td><td>Prüfen, ob JSON-Datei <code>employees</code> und <code>projects</code> enthält</td></tr>
+          <tr><td>Daten nach Browser-Neustart weg</td><td>Privater/Inkognito-Modus speichert nicht dauerhaft</td></tr>
+          <tr><td>⚠️ Warnung am Projekt (Pulsieren)</td><td>Mind. 2 Entwickler/Architekten im Projekt, aber kein Tech-Lead gesetzt</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:14px; padding:12px 14px; background:linear-gradient(135deg,#0F172A,#1E3A5F); border-radius:10px; color:white;">
+        <div style="font-size:8pt; font-weight:800; margin-bottom:6px; color:rgba(255,255,255,0.9);">📌 Wichtigste Tastenkombinationen</div>
+        <div style="font-size:7.5pt; color:rgba(255,255,255,0.7); line-height:1.8;">
+          <strong style="color:rgba(255,255,255,0.9);">Esc</strong> · Modals schließen<br/>
+          <strong style="color:rgba(255,255,255,0.9);">Klick auf Hintergrund</strong> · Modal schließen<br/>
+          <strong style="color:rgba(255,255,255,0.9);">Klick auf Mitarbeiterkarte</strong> · Profil öffnen<br/>
+          <strong style="color:rgba(255,255,255,0.9);">Klick auf Projektkarte</strong> · Projektdetails öffnen<br/>
+          <strong style="color:rgba(255,255,255,0.9);">Vakanz-Button</strong> · Öffnet/schließt Vakanzübersicht
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="page-footer">
+  <span>Referenz &amp; Best Practices · Visual Allocation Tool · Benutzerhandbuch · Version 1.0 · 2026</span>
+  <span><strong>Seite 10</strong></span>
+</div>
+</div>
+
+</body>
+</html>

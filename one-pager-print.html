@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<style>
+@page { size: A4 portrait; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  background: white;
+  color: #0F172A;
+}
+
+.page {
+  width: 210mm;
+  height: 297mm;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ─── HEADER ─── */
+.hdr {
+  background: linear-gradient(120deg, #0F172A 0%, #1E3A5F 50%, #1D4ED8 100%);
+  color: white;
+  padding: 14px 20px 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.hdr::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 400px 200px at 80% 50%, rgba(99,102,241,.3), transparent 70%);
+}
+.hdr-left { position: relative; z-index: 1; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 100px; padding: 2px 9px;
+  font-size: 6.5pt; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: rgba(255,255,255,.8); margin-bottom: 6px;
+}
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #34D399; }
+h1 { font-size: 19pt; font-weight: 900; letter-spacing: -.03em; line-height: 1.1; }
+h1 em { font-style: normal; background: linear-gradient(90deg,#60A5FA,#A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hdr-sub { font-size: 7.5pt; color: rgba(255,255,255,.65); margin-top: 4px; max-width: 310px; line-height: 1.45; }
+.hdr-chips { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.hdr-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 100px; padding: 2px 9px;
+  font-size: 7pt; font-weight: 500; color: rgba(255,255,255,.8);
+}
+
+/* ─── MAIN GRID ─── */
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 172px;
+  grid-template-rows: auto auto auto;
+  gap: 8px;
+  padding: 10px 16px 8px;
+  overflow: hidden;
+}
+
+/* section label */
+.slabel {
+  font-size: 6.5pt; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .08em; color: #64748B; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* card base */
+.card {
+  background: #F8FAFC; border: 1px solid #E2E8F0;
+  border-radius: 9px; padding: 9px 11px; overflow: hidden;
+}
+
+/* ─── MODULES ─── */
+.modules {
+  grid-column: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.module-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.mi {
+  display: flex; gap: 7px; align-items: flex-start;
+  background: white; border: 1px solid #E2E8F0;
+  border-radius: 7px; padding: 7px 9px;
+}
+.mn {
+  width: 20px; height: 20px; border-radius: 5px;
+  background: linear-gradient(135deg,#2563EB,#6366F1);
+  color: white; font-size: 7pt; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.mi h3 { font-size: 7.5pt; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
+.mi p { font-size: 6.5pt; color: #64748B; line-height: 1.45; }
+.tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+.tag {
+  font-size: 6pt; font-weight: 600; padding: 1px 5px;
+  border-radius: 100px; background: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE;
+}
+
+/* ─── KPIs ─── */
+.kpis { grid-column: 3; grid-row: 1; display: flex; flex-direction: column; gap: 6px; }
+.kpi {
+  display: flex; align-items: center; gap: 8px;
+  background: white; border: 1px solid #E2E8F0;
+  border-radius: 7px; padding: 7px 9px;
+}
+.ki { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13pt; flex-shrink: 0; }
+.kl { font-size: 6pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #64748B; }
+.kv { font-size: 14pt; font-weight: 900; line-height: 1; }
+.ks { font-size: 6pt; color: #94A3B8; margin-top: 1px; }
+
+/* ─── PIPELINE ─── */
+.pipeline {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg,#EFF6FF,#EEF2FF);
+  border: 1px solid #BFDBFE; border-radius: 9px;
+  padding: 8px 11px;
+}
+.stages { display: flex; margin-top: 6px; }
+.stage {
+  flex: 1; background: white; border: 1px solid #E2E8F0;
+  padding: 6px 4px; text-align: center; position: relative;
+}
+.stage:first-child { border-radius: 6px 0 0 6px; }
+.stage:last-child  { border-radius: 0 6px 6px 0; }
+.stage + .stage { border-left: none; }
+.sarr {
+  position: absolute; right: -9px; top: 50%; transform: translateY(-50%);
+  width: 17px; height: 17px; border-radius: 50%;
+  background: white; border: 1px solid #E2E8F0;
+  font-size: 8pt; font-weight: 700; color: #94A3B8;
+  display: flex; align-items: center; justify-content: center; z-index: 2;
+}
+.stage:last-child .sarr { display: none; }
+.sem { font-size: 11pt; display: block; margin-bottom: 2px; }
+.sn { font-size: 6.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #1E3A5F; }
+.sd { font-size: 6pt; color: #64748B; margin-top: 1px; line-height: 1.35; }
+
+/* ─── BOTTOM ─── */
+.bottom { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tech-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.tp {
+  font-size: 6.5pt; font-weight: 600; padding: 2px 8px;
+  border-radius: 100px; background: white; border: 1px solid #E2E8F0; color: #0F172A;
+}
+.facts { display: flex; flex-direction: column; gap: 4px; margin-top: 5px; }
+.fact { display: flex; align-items: center; gap: 6px; font-size: 7pt; color: #334155; }
+.fck {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #ECFDF5; border: 1px solid #6EE7B7;
+  color: #059669; font-size: 7.5pt; font-weight: 900;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ─── FOOTER ─── */
+.ftr {
+  background: #0F172A; color: rgba(255,255,255,.45);
+  font-size: 6.5pt; padding: 5px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+.ftr strong { color: rgba(255,255,255,.7); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="badge"><div class="badge-dot"></div>Standalone Web-App · Keine Server-Infrastruktur</div>
+      <h1>Visual <em>Allocation Tool</em></h1>
+      <p class="hdr-sub">Visuelle Ressourcenplanung für Projekt- und Poolmitarbeiter im Kunden-Umfeld –<br/>von der Projekt-Pipeline bis zur Teamauslastung, alles im Browser.</p>
+    </div>
+    <div class="hdr-chips">
+      <div class="hdr-chip">⚡ Vite · React · TypeScript</div>
+      <div class="hdr-chip">🖐 Drag &amp; Drop Bedienung</div>
+      <div class="hdr-chip">💾 Lokal · JSON Import / Export</div>
+      <div class="hdr-chip">📊 KPI-Dashboard · Echtzeit</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- MODULES -->
+    <div class="modules">
+      <div class="slabel">🔧 Kernmodule &amp; Funktionen</div>
+      <div class="module-grid">
+
+        <div class="mi">
+          <div class="mn">1</div>
+          <div>
+            <h3>KPI-Dashboard</h3>
+            <p>Gesamtauslastung, FTE-Einstellungsbedarf nach Rolle und kritische Risiken in Echtzeit.</p>
+            <div class="tags"><span class="tag">Auslastung %</span><span class="tag">FTE-Bedarf</span><span class="tag">Risiko-Alert</span></div>
+          </div>
+        </div>
+
+        <div class="mi">
+          <div class="mn">2</div>
+          <div>
+            <h3>Projekt-Pool (Whiteboard)</h3>
+            <p>Drag &amp; Drop von Mitarbeitern auf Projekte. Prozentzuweisung, Tech-Lead &amp; Überbuchungs-Warnung.</p>
+            <div class="tags"><span class="tag">Drag &amp; Drop</span><span class="tag">Tech-Lead</span><span class="tag">Überbucht-Alert</span></div>
+          </div>
+        </div>
+
+        <div class="mi">
+          <div class="mn">3</div>
+          <div>
+            <h3>Projekt-Pipeline (Kanban)</h3>
+            <p>Neue Projekte durch 5 Phasen. Beim Kickoff automatische Überführung in den aktiven Pool.</p>
+            <div class="tags"><span class="tag">5 Phasen</span><span class="tag">Auto-Promote</span><span class="tag">Rollenplanung</span></div>
+          </div>
+        </div>
+
+        <div class="mi">
+          <div class="mn">4</div>
+          <div>
+            <h3>Personalpipeline</h3>
+            <p>Newcomer-Tracking von Vertragsunterzeichnung bis Einsatzbereitschaft in 4 Phasen.</p>
+            <div class="tags"><span class="tag">4 Phasen</span><span class="tag">Startdatum</span><span class="tag">Drag &amp; Drop</span></div>
+          </div>
+        </div>
+
+        <div class="mi">
+          <div class="mn">5</div>
+          <div>
+            <h3>Globale Vakanzanalyse</h3>
+            <p>Header zeigt live offene % aus Pool &amp; Pipeline. Dashboard berechnet FTE-Bedarf je Rolle.</p>
+            <div class="tags"><span class="tag">Live-Update</span><span class="tag">Rollen-Breakdown</span><span class="tag">FTE-Calc</span></div>
+          </div>
+        </div>
+
+        <div class="mi">
+          <div class="mn">6</div>
+          <div>
+            <h3>Risiko- &amp; Potenzialmanagement</h3>
+            <p>Freitext-Erfassung pro Mitarbeiter &amp; Projekt. Kritische Einträge (Hoch/Kritisch) im Dashboard.</p>
+            <div class="tags"><span class="tag">Severity-Filter</span><span class="tag">Mitarbeiter</span><span class="tag">Projekt</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="slabel">📊 Live KPIs</div>
+
+      <div class="kpi">
+        <div class="ki" style="background:#EFF6FF">🎯</div>
+        <div>
+          <div class="kl">Gesamtauslastung</div>
+          <div class="kv" style="color:#2563EB">87%</div>
+          <div class="ks">Pool &amp; Pipeline inkl.</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="ki" style="background:#F0F9FF">👥</div>
+        <div>
+          <div class="kl">Einstellungsbedarf</div>
+          <div class="kv" style="color:#0EA5E9">3.5 FTE</div>
+          <div class="ks">SWE Backend, SM, PO</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="ki" style="background:#FEF2F2">⚠️</div>
+        <div>
+          <div class="kl">Kritische Risiken</div>
+          <div class="kv" style="color:#EF4444">2</div>
+          <div class="ks">Impact „Hoch/Kritisch"</div>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="ki" style="background:#ECFDF5">✅</div>
+        <div>
+          <div class="kl">Staffing Pool</div>
+          <div class="kv" style="color:#10B981">100%</div>
+          <div class="ks">Keine offenen Vakanzen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIPELINE FLOW -->
+    <div class="pipeline">
+      <div class="slabel">🚀 Projekt-Pipeline – 5-Phasen-Prozess (Opportunity → Kickoff → Aktiver Pool)</div>
+      <div class="stages">
+        <div class="stage">
+          <span class="sem">🔭</span>
+          <div class="sn">Opportunity</div>
+          <div class="sd">Erste Anfrage &amp; Potenzial identifiziert</div>
+          <div class="sarr">›</div>
+        </div>
+        <div class="stage">
+          <span class="sem">🔗</span>
+          <div class="sn">Anfrage</div>
+          <div class="sd">Projektanfrage in der Plattform registriert</div>
+          <div class="sarr">›</div>
+        </div>
+        <div class="stage">
+          <span class="sem">⚖️</span>
+          <div class="sn">Go / No-Go</div>
+          <div class="sd">Entscheidungsfindung &amp; Bewertung</div>
+          <div class="sarr">›</div>
+        </div>
+        <div class="stage">
+          <span class="sem">🧩</span>
+          <div class="sn">Staffing</div>
+          <div class="sd">Rollen definieren &amp; besetzen</div>
+          <div class="sarr">›</div>
+        </div>
+        <div class="stage">
+          <span class="sem">🚀</span>
+          <div class="sn">Kickoff</div>
+          <div class="sd">Auto-Überführung in den Pool</div>
+          <div class="sarr">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom">
+      <div class="card">
+        <div class="slabel">⚙️ Technologie-Stack</div>
+        <div class="tech-pills">
+          <div class="tp">⚡ Vite</div>
+          <div class="tp">⚛️ React 18</div>
+          <div class="tp">🟦 TypeScript</div>
+          <div class="tp">🎨 Tailwind CSS</div>
+          <div class="tp">🐻 Zustand</div>
+          <div class="tp">🖐 @dnd-kit</div>
+          <div class="tp">💾 LocalStorage</div>
+          <div class="tp">📦 JSON Export</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="slabel">✨ Vorteile auf einen Blick</div>
+        <div class="facts">
+          <div class="fact"><div class="fck">✓</div>Standalone – keine Serverinfrastruktur notwendig</div>
+          <div class="fact"><div class="fck">✓</div>100% offline-fähig, Daten bleiben lokal im Browser</div>
+          <div class="fact"><div class="fck">✓</div>Team-Sharing über JSON-Export mit Namens- &amp; Datumsstempel</div>
+          <div class="fact"><div class="fck">✓</div>Kein Login, kein Setup – sofort nutzbar im Browser</div>
+          <div class="fact"><div class="fck">✓</div>Modular erweiterbar, saubere TypeScript-Codebasis</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="ftr">
+    <span><strong>Visual Allocation Tool</strong> · Visuelle Ressourcenplanung</span>
+    <span>Standalone Web-App · React + TypeScript + Vite · 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
